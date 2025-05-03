@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "DQk77n7XbnY=",
+  "success": true,
+  "projectFilePath": "C:\\moviles\\Backend-Exam-API\\StudentCoursesSystem\\StudentCoursesSystem.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\jsand\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.4\\microsoft.aspnetcore.openapi.9.0.4.nupkg.sha512",
+    "C:\\Users\\jsand\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512"
+  ],
+  "logs": []
+}
