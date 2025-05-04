@@ -1,40 +1,49 @@
 using api.Data;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-
 var builder = WebApplication.CreateBuilder(args);
+
+// Config to be able to test on non-virtual devices
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
 
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi(); // Usa esto en vez de AddSwaggerGen si te da problemas
+builder.Services.AddSwaggerGen(); 
 
 // Build Controllers
 builder.Services.AddControllers();
 
-// Build DatabaseContext
+//Build DatabaseContext
 builder.Services.AddDbContext<ApplicationDBContext>(options => {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 var app = builder.Build();
+app.UseCors("AllowAll");
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi(); // Usa esto en vez de UseSwagger/UseSwaggerUI si te da problemas
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
+
+//app.UseHttpsRedirection();
+
+// Map Controlllers
+app.MapControllers();
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(
+    FileProvider = new Microsoft.Extensions.FileProviders.PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "UploadedImages")),
     RequestPath = "/uploads"
 });
-
-app.UseHttpsRedirection();
-
-// Map Controllers
-app.MapControllers();
 
 app.Run();
