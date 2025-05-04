@@ -24,8 +24,11 @@ namespace api.Controllers
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-      var students = await _context.Students.ToListAsync();
-      var studentsDto = students.Select(student => student.ToDto());
+      var students = await _context.Students
+        .Include(s => s.Course)  // Including Course object
+        .ToListAsync();
+
+      var studentsDto = students.Select(student => student.ToDto()); 
       return Ok(studentsDto);
     }
 

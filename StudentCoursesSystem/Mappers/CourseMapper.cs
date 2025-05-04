@@ -18,6 +18,19 @@ namespace api.Mappers
       };
     }
 
+    public static CourseBasicDto ToBasicDto(this Course courseItem)
+    {
+      return new CourseBasicDto
+      {
+        Id = courseItem.Id,
+        Name = courseItem.Name,
+        Description = courseItem.Description,
+        ImageUrl = courseItem.ImageUrl,
+        Schedule = courseItem.Schedule,
+        Professor = courseItem.Professor
+      };
+    }
+
     public static Course ToCourseFromCreateDto(this CreateCourseRequestDto createCourseRequest)
     {
       return new Course

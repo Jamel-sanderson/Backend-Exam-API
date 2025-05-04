@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using api.Dtos.Student;
 
-namespace api.Models
+namespace api.Dtos.Course
 {
-  public class Course
+  public class CourseBasicDto
   {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -13,6 +11,5 @@ namespace api.Models
     public string ImageUrl { get; set; }
     public string Schedule { get; set; }
     public string Professor { get; set; }
-    public ICollection<Student> Students { get; set; } = new List<Student>();
   }
 }

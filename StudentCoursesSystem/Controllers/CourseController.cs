@@ -25,8 +25,16 @@ namespace api.Controllers
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
-      var courses = await _context.Courses.ToListAsync();
-      var coursesDto = courses.Select(course => course.ToDto());
+      var courses = await _context.Courses
+        .Include(c => c.Students)  
+        .ToListAsync();
+
+      var coursesDto = courses.Select(course => 
+      {
+        var courseDto = course.ToDto();
+        courseDto.Students = course.Students?.Select(s => s.ToBasicDto()).ToList(); // Only basic info of each student, its Course isnt required
+        return courseDto;
+      });
       return Ok(coursesDto);
     }
 

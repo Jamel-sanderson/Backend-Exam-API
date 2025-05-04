@@ -16,13 +16,13 @@ namespace api.Data
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-      base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
 
-      // Configure the relationship between Course and Student
-      modelBuilder.Entity<Student>()
-          .HasOne<Course>()
-          .WithMany()
-          .HasForeignKey(s => s.CourseId);
+        // Configure the relationship between Course and Student
+        modelBuilder.Entity<Student>()
+            .HasOne(s => s.Course)  
+            .WithMany(c => c.Students)
+            .HasForeignKey(s => s.CourseId);
     }
   }
 }

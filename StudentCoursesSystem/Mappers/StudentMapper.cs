@@ -13,7 +13,19 @@ namespace api.Mappers
         Name = studentItem.Name,
         Email = studentItem.Email,
         Phone = studentItem.Phone,
-        CourseId = studentItem.CourseId
+        CourseId = studentItem.CourseId,
+        Course = studentItem.Course?.ToBasicDto() // Just basic info
+      };
+    }
+
+    public static StudentBasicDto ToBasicDto(this Student studentItem)
+    {
+      return new StudentBasicDto
+      {
+        Id = studentItem.Id,
+        Name = studentItem.Name,
+        Email = studentItem.Email,
+        Phone = studentItem.Phone
       };
     }
 

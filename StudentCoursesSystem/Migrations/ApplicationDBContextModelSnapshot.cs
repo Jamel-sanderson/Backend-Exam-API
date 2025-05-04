@@ -86,11 +86,18 @@ namespace StudentCoursesSystem.Migrations
 
             modelBuilder.Entity("api.Models.Student", b =>
                 {
-                    b.HasOne("api.Models.Course", null)
-                        .WithMany()
+                    b.HasOne("api.Models.Course", "Course")
+                        .WithMany("Students")
                         .HasForeignKey("CourseId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Course");
+                });
+
+            modelBuilder.Entity("api.Models.Course", b =>
+                {
+                    b.Navigation("Students");
                 });
 #pragma warning restore 612, 618
         }
