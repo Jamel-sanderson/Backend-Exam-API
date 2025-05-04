@@ -28,14 +28,16 @@ namespace api.Controllers
         .Include(s => s.Course)  // Including Course object
         .ToListAsync();
 
-      var studentsDto = students.Select(student => student.ToDto()); 
+      var studentsDto = students.Select(student => student.ToDto()); // Just Basic info
       return Ok(studentsDto);
     }
 
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-      var student = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
+      var student = await _context.Students
+        .Include(s => s.Course)  
+        .FirstOrDefaultAsync(s => s.Id == id);
       if (student == null)
       {
         return NotFound();
@@ -75,7 +77,9 @@ namespace api.Controllers
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateStudentRequestDto studentDto)
     {
-      var studentModel = await _context.Students.FirstOrDefaultAsync(s => s.Id == id);
+      var studentModel = await _context.Students
+        .Include(s => s.Course)  
+        .FirstOrDefaultAsync(s => s.Id == id);
       if (studentModel == null)
       {
         return NotFound();

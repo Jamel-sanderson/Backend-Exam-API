@@ -41,12 +41,18 @@ namespace api.Controllers
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById([FromRoute] int id)
     {
-      var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == id);
+      var course = await _context.Courses
+        .Include(c => c.Students) 
+        .FirstOrDefaultAsync(c => c.Id == id);
       if (course == null)
       {
         return NotFound();
       }
-      return Ok(course.ToDto());
+
+      var courseDto = course.ToDto();
+      courseDto.Students = course.Students?.Select(s => s.ToBasicDto()).ToList(); // Only basic info of each student, its Course isnt required
+
+      return Ok(courseDto);
     }
 
     [HttpPost]
@@ -78,7 +84,9 @@ namespace api.Controllers
     [Route("{id}")]
     public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCourseRequestDto courseDto)
     {
-      var courseModel = await _context.Courses.FirstOrDefaultAsync(c => c.Id == id);
+      var courseModel = await _context.Courses
+        .Include(c => c.Students)  
+        .FirstOrDefaultAsync(c => c.Id == id);
       if (courseModel == null)
       {
         return NotFound();
@@ -97,7 +105,11 @@ namespace api.Controllers
           body: $"The course \"{courseModel.Name}\" has been updated!"
       );
 */
-      return Ok(courseModel.ToDto());
+      // Include students on object response
+      var courseResponseDto = courseModel.ToDto();
+      courseResponseDto.Students = courseModel.Students?.Select(s => s.ToBasicDto()).ToList();
+
+      return Ok(courseResponseDto);
     }
 
     [HttpDelete]
