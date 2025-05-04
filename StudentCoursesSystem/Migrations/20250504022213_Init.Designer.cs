@@ -11,8 +11,8 @@ using api.Data;
 namespace StudentCoursesSystem.Migrations
 {
     [DbContext(typeof(ApplicationDBContext))]
-    [Migration("20250504001709_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20250504022213_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,7 +37,6 @@ namespace StudentCoursesSystem.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ImageUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
