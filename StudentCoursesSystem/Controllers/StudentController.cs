@@ -69,37 +69,42 @@ namespace api.Controllers
       return Ok(studentsDto);
     }
 
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CreateStudentRequestDto studentDto)
+   [HttpPost]
+public async Task<IActionResult> Create([FromBody] CreateStudentRequestDto studentDto)
+{
+    // 1. First its gonna be validated by DTO definition
+    if (!ModelState.IsValid)
     {
-      // 1. First its gonna be validated by DTO definition
-      if (!ModelState.IsValid)
-      {
         return BadRequest(ModelState);
-      }
+    }
 
-      // 2. Custom validation for unique Course name 
-      if (await IsNameUniqueAsync(studentDto.Name) == false)
-      {
+    // 2. Custom validation for unique Course name 
+    if (await IsNameUniqueAsync(studentDto.Name) == false)
+    {
         ModelState.AddModelError(nameof(studentDto.Name), StudentValidationConstants.NameUniqueErrorMessage);
         return BadRequest(ModelState);
-      }
-
-      // 3. Check if the course exists
-      var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == studentDto.CourseId);
-      if (course == null)
-      {
-        return BadRequest("Course does not exist");
-      }
-
-      // 4. Inserting on DB through model definition
-      var studentModel = studentDto.ToStudentFromCreateDto();
-      await _context.Students.AddAsync(studentModel);
-      await _context.SaveChangesAsync();
-
-      // 5. Response
-      return CreatedAtAction(nameof(GetById), new { id = studentModel.Id }, studentModel.ToDto());
     }
+
+    // 3. Check if the course exists
+    var course = await _context.Courses.FirstOrDefaultAsync(c => c.Id == studentDto.CourseId);
+    if (course == null)
+    {
+        return BadRequest("Course does not exist");
+    }
+
+    // 4. Inserting on DB through model definition
+    var studentModel = studentDto.ToStudentFromCreateDto();
+    await _context.Students.AddAsync(studentModel);
+    await _context.SaveChangesAsync();
+
+    // 5. Send push notification
+    string notificationTitle = "Nuevo estudiante inscrito";
+    string notificationBody = $"Estudiante: {studentDto.Name}, se ha inscrito al curso: {course.Name}";
+    await FirebaseHelper.SendPushNotificationToTopicAsync("event_notifications", notificationTitle, notificationBody);
+
+    // 6. Response
+    return CreatedAtAction(nameof(GetById), new { id = studentModel.Id }, studentModel.ToDto());
+}
 
     [HttpPut]
     [Route("{id}")]
@@ -181,7 +186,7 @@ namespace api.Controllers
         // 2. We need to exclude the own student from the check (if it's an update)
         if (excludeId.HasValue)
         {
-          query = query.Where(ss => s.Id != excludeId.Value);
+          query = query.Where(s => s.Id != excludeId.Value);
         }
         
         // 3. Executing the query

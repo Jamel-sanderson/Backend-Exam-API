@@ -1,45 +1,56 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
+using Google.Apis.Auth.OAuth2;
+using System.Net.Http.Headers;
 using System.Text.Json;
-using System.Threading.Tasks;
+using System.Text;
 
-namespace api.Helpers
+public static class FirebaseHelper
 {
-  public static class FirebaseHelper
-  {
-    private static readonly HttpClient client = new HttpClient();
-    //private static readonly string firebaseServerKey = "YOUR_FIREBASE_SERVER_KEY"; // Replace with your actual Firebase server key
-    private static readonly string firebaseUrl = "https://fcm.googleapis.com/fcm/send";
+  private static readonly HttpClient client = new HttpClient();
 
-    public static async Task SendPushNotificationToTopicAsync(string topic, string title, string body)
+  public static async Task SendPushNotificationToTopicAsync(string topic, string title, string body)
+  {
+    var accessToken = await GetAccessTokenAsync();
+
+    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+    client.DefaultRequestHeaders.TryAddWithoutValidation("Content-Type", "application/json");
+
+    var message = new
     {
-      var notification = new
+      message = new
       {
-        to = $"/topics/{topic}",
+        topic = topic, // Sending to the topic
         notification = new
         {
-          title,
-          body
+          title = title,
+          body = body
         }
-      };
-
-      var json = JsonSerializer.Serialize(notification);
-      var content = new StringContent(json, Encoding.UTF8, "application/json");
-
-      //client.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", $"key={firebaseServerKey}");
-      
-      try
-      {
-        var response = await client.PostAsync(firebaseUrl, content);
-        response.EnsureSuccessStatusCode();
       }
-      catch (Exception ex)
-      {
-        // Log the error
-        Console.WriteLine($"Error sending notification: {ex.Message}");
-      }
+    };
+
+    var json = JsonSerializer.Serialize(message);
+
+    var response = await client.PostAsync(
+        "https://fcm.googleapis.com/v1/projects/studentcoursessystem/messages:send",
+        new StringContent(json, Encoding.UTF8, "application/json")
+    );
+
+    if (!response.IsSuccessStatusCode)
+    {
+      var error = await response.Content.ReadAsStringAsync();
+      Console.WriteLine($"Error sending FCM: {error}");
     }
+  }
+
+  private static async Task<string> GetAccessTokenAsync()
+  {
+    // Synchronously load the credentials
+    GoogleCredential credential = GoogleCredential
+        .FromFile("firebase-adminsdk.json")
+        .CreateScoped("https://www.googleapis.com/auth/firebase.messaging");
+
+    // Now you can await on the async method to get the access token
+    var accessToken = await credential.UnderlyingCredential.GetAccessTokenForRequestAsync();
+
+    return accessToken;
   }
 }
