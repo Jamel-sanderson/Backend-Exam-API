@@ -109,7 +109,7 @@ namespace api.Controllers
 
     [HttpPut]
     [Route("{id}")]
-    public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateCourseRequestDto courseDto)
+    public async Task<IActionResult> Update([FromRoute] int id, [FromForm] UpdateCourseRequestDto courseDto)
     {
       // 1. First its gonna be validated by DTO definition
       if (!ModelState.IsValid)
@@ -123,30 +123,44 @@ namespace api.Controllers
         ModelState.AddModelError(nameof(courseDto.Name), CourseValidationConstants.NameUniqueErrorMessage);
         return BadRequest(ModelState);
       }
+
+      // 3. If not file was uploaded (shouldnt be happening because of previous validation)
+      if (courseDto.File == null || courseDto.File.Length == 0)
+        return BadRequest("No file uploaded.");
       
-      // 3. Recovering specific db row of the course and including its students
+      // 4. Recovering specific db row of the course and including its students
       var courseModel = await _context.Courses
         .Include(c => c.Students)  
         .FirstOrDefaultAsync(c => c.Id == id);
 
-      // 4. If no course was found
+      // 5. If no course was found
       if (courseModel == null)
       {
         return NotFound();
       }
 
-      // 5. Updating its attributes
+      // 6. Parsing file
+      var fileName = courseModel.Id.ToString() + Path.GetExtension(courseDto.File.FileName);
+      var filePath = Path.Combine(_imagePath, fileName);
+
+      using (var stream = new FileStream(filePath, FileMode.Create))
+      {
+        await courseDto.File.CopyToAsync(stream);
+      }
+
+      // 7. Updating its attributes
       courseModel.Name = courseDto.Name;
       courseModel.Description = courseDto.Description;
       courseModel.Schedule = courseDto.Schedule;
       courseModel.Professor = courseDto.Professor;
+      courseModel.ImageUrl = fileName;
       await _context.SaveChangesAsync();
 
-      // 6. Mapping the course to DTO and also mapping its students
+      // 8. Mapping the course to DTO and also mapping its students
       var courseResponseDto = courseModel.ToDto();
       courseResponseDto.Students = courseModel.Students?.Select(s => s.ToBasicDto()).ToList();
 
-      // 7. Response
+      // 9. Response
       return Ok(courseResponseDto);
     }
 
