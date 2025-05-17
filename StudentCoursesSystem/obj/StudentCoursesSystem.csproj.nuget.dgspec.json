@@ -1,25 +1,31 @@
 {
   "format": 1,
   "restore": {
-    "C:\\moviles\\Backend-Exam-API\\StudentCoursesSystem\\StudentCoursesSystem.csproj": {}
+    "C:\\Users\\Jamyr\\OneDrive\\Documentos\\Primer Semestre UNA 2025\\Aplicaciones Móviles\\Trabajos\\Examen 1\\API\\StudentCoursesSystem\\StudentCoursesSystem.csproj": {}
   },
   "projects": {
-    "C:\\moviles\\Backend-Exam-API\\StudentCoursesSystem\\StudentCoursesSystem.csproj": {
+    "C:\\Users\\Jamyr\\OneDrive\\Documentos\\Primer Semestre UNA 2025\\Aplicaciones Móviles\\Trabajos\\Examen 1\\API\\StudentCoursesSystem\\StudentCoursesSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\moviles\\Backend-Exam-API\\StudentCoursesSystem\\StudentCoursesSystem.csproj",
+        "projectUniqueName": "C:\\Users\\Jamyr\\OneDrive\\Documentos\\Primer Semestre UNA 2025\\Aplicaciones Móviles\\Trabajos\\Examen 1\\API\\StudentCoursesSystem\\StudentCoursesSystem.csproj",
         "projectName": "StudentCoursesSystem",
-        "projectPath": "C:\\moviles\\Backend-Exam-API\\StudentCoursesSystem\\StudentCoursesSystem.csproj",
-        "packagesPath": "C:\\Users\\jsand\\.nuget\\packages\\",
-        "outputPath": "C:\\moviles\\Backend-Exam-API\\StudentCoursesSystem\\obj\\",
+        "projectPath": "C:\\Users\\Jamyr\\OneDrive\\Documentos\\Primer Semestre UNA 2025\\Aplicaciones Móviles\\Trabajos\\Examen 1\\API\\StudentCoursesSystem\\StudentCoursesSystem.csproj",
+        "packagesPath": "C:\\Users\\Jamyr\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Jamyr\\OneDrive\\Documentos\\Primer Semestre UNA 2025\\Aplicaciones Móviles\\Trabajos\\Examen 1\\API\\StudentCoursesSystem\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\jsand\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Jamyr\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -47,6 +53,30 @@
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.4, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[8.1.1, )"
             }
           },
           "imports": [
