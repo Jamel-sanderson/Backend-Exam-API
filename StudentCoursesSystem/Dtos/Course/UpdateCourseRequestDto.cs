@@ -30,5 +30,8 @@ namespace api.Dtos.Course
     [RegularExpression(CourseValidationConstants.ProfessorRegex,
       ErrorMessage = CourseValidationConstants.ProfessorErrorMessage)]
     public string Professor { get; set; }
+
+    [Required(ErrorMessage = CourseValidationConstants.FileRequiredMessage)]
+    public IFormFile File { get; set; }
   }
 }
